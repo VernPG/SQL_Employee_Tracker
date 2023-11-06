@@ -77,6 +77,78 @@ const init = () =>{
        };
     })
     ])
+};
+showDepartments = () =>{
+  console.log;
+  connection.promise().query(sql, (err, rows) => {
+    if (err) throw err;
+    console.table(rows);
+    promptUser();
+  });
 }
+
+showRoles= () =>{
+  console.log;
+  connection.promise().query(sql, (err, rows) => {
+    if (err) throw err;
+    console.table(rows);
+    promptUser();
+  });
+}
+
+
+
+showEmployees= () =>{
+  console.log;
+  connection.promise().query(sql, (err, rows) => {
+    if (err) throw err;
+    console.table(rows);
+    promptUser();
+  });
+}
+     
+
+
+ addDepartment= () =>{
+  console.log;
+  connection.promise().query(sql, (err, rows) => {
+    if (err) throw err;
+    console.table(rows);
+    promptUser();
+  });
+}
+
+
+ addRole= () =>{
+  console.log;
+  connection.promise().query(sql, (err, rows) => {
+    if (err) throw err;
+    console.table(rows);
+    promptUser();
+  });
+}
+    
+
+ addEmployee= () =>{
+  console.log;
+  connection.promise().query(sql, (err, rows) => {
+    if (err) throw err;
+    console.table(rows);
+    promptUser();
+  });
+}
+      
+
+ updateEmployee= () =>{
+  console.log;
+  connection.promise().query(sql, (err, rows) => {
+    if (err) throw err;
+    console.table(rows);
+    promptUser();
+  });
+}
+
+
+
 init();
 
