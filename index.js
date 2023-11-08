@@ -200,7 +200,7 @@ addRole = async () => {
 };
 
 addEmployee = async () => {
-  const sql = `INSERT INTO employee (first_name, last_name, role_id, manager_id) VALUES (?, ?, ?)`;
+  const sql = `INSERT INTO employee (first_name, last_name, role_id, manager_id) VALUES (?, ?, ?, ?)`;
   const departmentsData = await connection
     .promise()
     .query("Select * from role");
@@ -219,26 +219,31 @@ addEmployee = async () => {
         name: "role_id",
         type: "list",
         message:
-          "Please select a role you would like to assign to the new employee?",
+          "Please select a role you would like to assign the new employee?",
         choices: formattedData,
       },
       {
-        name: "title",
+        name: "first_name",
         type: "input",
-        message: "What is the first name of the new employee?",
+        message: "What is the first name for the new employee?",
       },
       {
-        name: "title",
+        name: "last_name",
         type: "input",
-        message: "What is the last name of the new employee?",
+        message: "What is the last name for the new employee?",
       },
+      {
+        name: "manager_id",
+        type: "input",
+        message: "Is the new employee a manager, please respond with null if no"
+      }
     ])
     .then((answers) => {
       console.log(answers);
 
       connection
         .promise()
-        .query(sql, [answers.first_name, answers.last_name, answers.role_id])
+        .query(sql, [answers.first_name, answers.last_name, answers.manager_id, answers.role_id])
         .then((data) => {
           console.table(data[0]);
           init();
@@ -246,6 +251,7 @@ addEmployee = async () => {
         .catch((err) => console.log(err));
     });
 };
+
 
 updateEmployee = async () => {
   const sql = `UPDATE employee SET (first_name, last_name, role_id, manager_id) WHERE id = (?)`;
