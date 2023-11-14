@@ -36,9 +36,9 @@ WHEN I choose to update an employee role
 THEN I am prompted to select an employee to update and their new role and this information is updated in the database 
 ```
  ## Images and Repo
-  ![Preview image]() 
+  ![Preview image](./images/Screenshot%202023-11-14%20at%204.33.31 PM.png) 
 
   ** [Repo can be found HERE](https://github.com/VernPG/SQL_Employee_Tracker.git)
 
-  ** [Video can be found HERE]()
+  ** [Video can be found HERE and is also saved in the Repo](https://drive.google.com/file/d/1JWsYxz6qh8cbqA4BXrg0G0ya0f6-brOY/view)
  
