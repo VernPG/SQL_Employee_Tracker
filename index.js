@@ -33,7 +33,7 @@ afterConnection = () => {
   console.log("*    EMPLOYEE TRACKER       *");
   console.log("*                           *");
   console.log("*****************************");
-  init();
+  // init();
 };
 
 const init = () => {
@@ -57,7 +57,7 @@ const init = () => {
     // add all question repsonses
     .then((answers) => {
       const { choices } = answers;
-      console.log(choices, answers);
+      // console.log(choices, answers);
       if (choices === "view all departments") {
         showDepartments();
       }
@@ -200,19 +200,27 @@ addRole = async () => {
 };
 
 addEmployee = async () => {
-  const sql = `INSERT INTO employee (first_name, last_name, role_id, manager_id) VALUES (?, ?, ?, ?)`;
-  const departmentsData = await connection
-    .promise()
-    .query("Select * from role");
-  console.log(departmentsData);
-  let formattedData = [];
-  for (let i = 0; i < departmentsData[0].length; i++) {
-    formattedData.push({
-      name: departmentsData[0][i].name,
-      value: departmentsData[0][i].id,
+  const sql = `INSERT INTO employee (first_name, last_name, manager_id, role_id) VALUES (?, ?, ?, ?)`;
+  
+  const roleData = await connection.promise().query("Select * from role");
+  console.log("employees", roleData);
+  let formattedRoleData = [];
+  for (let i = 0; i < roleData[0].length; i++) {
+    formattedRoleData.push({
+      name: roleData[0][i].title,
+      value: roleData[0][i].id,
     });
   }
-  console.log(formattedData);
+  console.log(formattedRoleData);
+
+  const [employeeData] = await connection
+    .promise()
+    .query("Select * from employee");
+  const formattedEmployeeData = employeeData.map((emp) => ({
+    name: emp.first_name + " " + emp.last_name,
+    value: emp.id,
+  }));
+
   inquirer
     .prompt([
       {
@@ -220,7 +228,7 @@ addEmployee = async () => {
         type: "list",
         message:
           "Please select a role you would like to assign the new employee?",
-        choices: formattedData,
+        choices: formattedRoleData,
       },
       {
         name: "first_name",
@@ -234,16 +242,22 @@ addEmployee = async () => {
       },
       {
         name: "manager_id",
-        type: "input",
-        message: "Is the new employee a manager, please respond with null if no"
-      }
+        type: "list",
+        message: "Which department manager will the employee report to?",
+        choices: formattedEmployeeData,
+      },
     ])
     .then((answers) => {
       console.log(answers);
 
       connection
         .promise()
-        .query(sql, [answers.first_name, answers.last_name, answers.manager_id, answers.role_id])
+        .query(sql, [
+          answers.first_name,
+          answers.last_name,
+          answers.manager_id,
+          answers.role_id,
+        ])
         .then((data) => {
           console.table(data[0]);
           init();
@@ -252,33 +266,39 @@ addEmployee = async () => {
     });
 };
 
-
 updateEmployee = async () => {
-  const sql = `UPDATE employee SET (first_name, last_name, role_id, manager_id) WHERE id = (?)`;
-  const departmentsData = await connection
-    .promise()
-    .query("Select * from role");
-  console.log(departmentsData);
+  const sql = `UPDATE employee SET role_id = ? WHERE id = (?)`;
+  const employeesData = await connection.promise().query("Select * from role");
+  console.log(employeesData);
   let formattedData = [];
-  for (let i = 0; i < departmentsData[0].length; i++) {
+  for (let i = 0; i < employeesData[0].length; i++) {
     formattedData.push({
-      name: departmentsData[0][i].name,
-      value: departmentsData[0][i].id,
+      name: employeesData[0][i].title,
+      value: employeesData[0][i].id,
     });
   }
-  console.log(formattedData);
+  
+  const [employeeData] = await connection
+  .promise()
+  .query("Select * from employee");
+const formattedEmployeeData = employeeData.map((emp) => ({
+  name: emp.first_name + " " + emp.last_name,
+  value: emp.id,
+}));
+  console.log("formatted", formattedData);
   inquirer
     .prompt([
       {
         name: "updateEmp",
         type: "list",
         message: "Please select a employee you would like to add the new role?",
-        choices: formattedData,
+        choices: formattedEmployeeData
       },
       {
         name: "title",
-        type: "input",
-        message: "What is the title name for the new role?",
+        type: "list",
+        message: "Please select a title for the new employee?",
+        choices: formattedData,
       },
     ])
     .then((answers) => {
@@ -286,7 +306,9 @@ updateEmployee = async () => {
 
       connection
         .promise()
-        .query(sql, [answers.first_name, answers.last_name, answers.updateEmp])
+        .query(sql, [
+          answers.title, answers.updateEmp
+        ])
         .then((data) => {
           console.table(data[0]);
           init();
