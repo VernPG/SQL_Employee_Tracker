@@ -291,13 +291,13 @@ const formattedEmployeeData = employeeData.map((emp) => ({
       {
         name: "updateEmp",
         type: "list",
-        message: "Please select a employee you would like to add the new role?",
+        message: "Please select a employee you would like to update their role?",
         choices: formattedEmployeeData
       },
       {
         name: "title",
         type: "list",
-        message: "Please select a title for the new employee?",
+        message: "Please select a title for the employee?",
         choices: formattedData,
       },
     ])
